@@ -1,53 +1,53 @@
 /*
-    Очистка от ложных срабатываний базового правила, если в проекте присутствуют файлы сборки для библиотек
+    Clearing false positives of the base rule if the project contains build files for libraries
 */
 
-// Поиск метода release среди всех методов в Gradle файлах
+// Search for the release method among all methods in Gradle files
 CxList releaseMethod = Find_Gradle_Method("release");
 
-// Все объекты из файлов build.gradle
+// All objects from build.gradle files
 CxList gradleBuildObjects = Find_Gradle_Build_Objects();
 
-// Поиск того, что находится внутри метода "release" среди всех объектов из файлов build.gradle
+// Search for what is inside the "release" method among all objects from build.gradle files
 CxList methodInvokesUnderRelease = gradleBuildObjects.FindByType(typeof(MethodInvokeExpr)).GetByAncs(releaseMethod);
 
-// Ищем внутри gradle-файлов строку "com.android.library" - это значит, что данный файл относится к библиотеке и его необходимо исключить из правила
+// Search inside gradle files for the string "com.android.library" - this means that this file belongs to a library and should be excluded from the rule
 CxList android_library = gradleBuildObjects.FindByName("com.android.library");
 
-// Инициализация пустого массива
+// Initialize an empty array
 List<string> libraries_path = new List<string> {};
 
-// Проходим через все найденные "дочерние" файлы
+// Iterate through all found "child" files
 foreach(CxList library in android_library)
 {
-    // Получаем путь к каждому файлу
+    // Get the path to each file
 	string file_name_library = library.GetFirstGraph().LinePragma.FileName;
     
-    // Добавляем его в наш массив
+    // Add it to our array
 	libraries_path.Add(file_name_library);
 }
 
-// Ищем все вызовы включения обфускации в релизных настройках
+// Search for all calls to enable obfuscation in release settings
 CxList minifyEnabled = methodInvokesUnderRelease.FindByShortName("minifyEnabled");
 
-// Получаем параметры этих вызовов
+// Get the parameters of these calls
 CxList minifyValue = gradleBuildObjects.GetParameters(minifyEnabled, 0);
 
-// Ищем среди них включенные
+// Search among them for enabled ones
 CxList minifyValueTrue = minifyValue.FindByShortName("true");
 
-// Немного магии, если не нашли стандартным способом :D
+// A bit of magic if not found in the standard way :D
 if (minifyValueTrue.Count == 0) {
 	minifyValue = minifyValue.FindByAbstractValue(abstractValue => abstractValue is TrueAbstractValue);
 } else {
-    // А если всё-таки нашли, то предыдущий результат и оставляем
+    // If found, keep the previous result
 	minifyValue = minifyValueTrue;	
 }
 
-// Если не нашлось таких методов
+// If no such methods are found
 if (minifyValue.Count == 0)
 {
-    // Для более корректного отображения места срабатывания в файле ищем или buildTypes или android
+    // For more accurate display of the trigger location in the file, search for either buildTypes or android
 	CxList tempResult = All.NewCxList();
 	CxList buildTypes = Find_Gradle_Method("buildTypes");
 	if (buildTypes.Count > 0) {
@@ -56,13 +56,13 @@ if (minifyValue.Count == 0)
 		tempResult = Find_Gradle_Method("android");
 	}
 	
-	// Для каждого из найденных мест срабатывания проходим и определяем, дочерний или основной файлы сборки
+	// For each found trigger location, determine if it is a child or main build file
 	foreach(CxList res in tempResult)
 	{
-        // Определяем, в каком файле был найден buildType или android методы
+        // Determine in which file the buildType or android methods were found
 		string file_name_result = res.GetFirstGraph().LinePragma.FileName;
         
-        // Если такого файла нет в нашем списке "дочерних" файлов - значит это основной файл и его можно добавить в результат
+        // If such a file is not in our list of "child" files, then it is the main file and can be added to the result
 		if (libraries_path.Contains(file_name_result) == false){
 			result.Add(res);
 		}

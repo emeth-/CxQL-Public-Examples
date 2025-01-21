@@ -1,5 +1,5 @@
 /*
-    Проверка корректности настройки доверия сертификатам
+    Check the correctness of certificate trust settings
 */
 
 CxList certificates = All.NewCxList();

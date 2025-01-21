@@ -1,12 +1,12 @@
 /*
-    Добавлена поддержка метода `getInputData` для WorkManager
+    Added support for the `getInputData` method for WorkManager
 */
 
-// Получаем результат выполнения базового правила
+// Get the result of executing the base rule
 result = base.Find_Android_Read();
 
-// Дополняем вызовом функции getInputData, которая используется в WorkManager
+// Supplement with a call to the getInputData function, which is used in WorkManager
 CxList getInputData = All.FindByShortName("getInputData");
 
-// Добавляем к конечному результату
+// Add to the final result
 result.Add(getInputData.GetMembersOfTarget());

@@ -1,5 +1,5 @@
 /*
-    Override дефолтного правила и добавление нескольких дополнительных переменных для поиска
+    Override of the default rule and adding several additional variables for search
 */
 
 result = base.General_privacy_violation_list();

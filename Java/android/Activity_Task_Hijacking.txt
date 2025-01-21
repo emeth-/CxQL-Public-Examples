@@ -1,5 +1,5 @@
 /*
-    Поиск подверженных уязвимости Task Hijacking компонент приложения
+    Search for application components vulnerable to Task Hijacking
     https://xakep.ru/2017/08/14/android-task-hijacking/
 */
 

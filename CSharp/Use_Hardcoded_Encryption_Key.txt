@@ -1,7 +1,7 @@
 /*
-    Поиск ключей шифрования в коде, которые заданы массивом байтов.
+    Search for encryption keys in the code that are set by a byte array.
 
-    Сниппет:
+    Snippet:
     public static readonly byte[] Key = { 153, 218, 226, 145, 167, 101, 132, 182, 143, 133, 91, 234, 217, 150, 90, 126 };
     public static readonly byte[] Iv = { 127, 114, 213, 125, 211, 150, 175, 106 };
     ...

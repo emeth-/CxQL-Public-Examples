@@ -1,5 +1,5 @@
 /*
-    Проверка сетевых настроек, разрешающих взаимодействие по HTTP
+    Check network settings that allow interaction over HTTP
 */
 
 bool isInt = false;

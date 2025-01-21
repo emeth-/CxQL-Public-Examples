@@ -1,17 +1,17 @@
 /*
-    Использование сертификатов из ресурсов приложения
+    Using certificates from application resources
     <name>.der / <name>.cer / private_key / public_key
 */
 
-// Найдем все сертификаты по маске файла
+// Find all certificates by file mask
 CxList find_certs = All.FindByShortNames(new List<string> {"*.der", "*.cer", "*.pem", "*.key"}, false);
 
-// Проверим, где в приложении они используются
+// Check where they are used in the application
 CxList data_used_certs = All.DataInfluencedBy(find_certs);
 
-// И для мобильных приложений - можем поискать методы, где вызывается чтение сертификатов
-// Для других платформ и приложений могут быть различные методы
+// And for mobile applications - we can search for methods where certificate reading is called
+// For other platforms and applications, there may be different methods
 CxList methods = All.FindByMemberAccess("*.getAssets");
 
-// Пересечение множеств даст нам результат по использованию локальных сертификатов в приложении
+// The intersection of sets will give us the result of using local certificates in the application
 result = methods * data_used_certs;

@@ -1,34 +1,34 @@
 /*
-    Поиск использования Splicing Literal Values в библиотеке slick
+    Search for the use of Splicing Literal Values in the slick library
 */
 
-// Находим все импорты
+// Find all imports
 CxList imports = All.FindByType(typeof(Import));
 
-// Ищем по имени, есть ли в импортах slick
+// Search by name to see if slick is in the imports
 CxList slick = imports.FindByShortName("slick");
 
-// Некоторый флаг, определяющий, что импорт библиотеки в коде присутствует
-// Для более точного определения - можно применить подход с именем файла
+// Some flag indicating that the library import is present in the code
+// For more accurate determination, you can use the file name approach
 bool not_empty_list = false;
 foreach (CxList r in slick)
 {
-    // Если встретили импорт, считаем, что slick используется
+    // If we encounter an import, we consider that slick is used
 	not_empty_list = true;
 }
 
 if (not_empty_list) {
-    // Ищем вызовы, в которые передается SQL-строка
+    // Search for calls that pass an SQL string
 	CxList sql = All.FindByShortName("sql");
 	sql.Add(All.FindByShortName("sqlu"));
 	
-	// Определяем данные, которые попадают в эти вызовы
+	// Determine the data that gets into these calls
 	CxList data_sql = All.DataInfluencingOn(sql);
 	
-	// Так как синтакис не поддерживается, можно применить подход с регулярными выражениями
-	// RegExp стоит использовать крайне осторожно и не применять его на большом количестве данных, так как это может сильно повлиять на производительность
+	// Since syntax is not supported, you can use the regular expressions approach
+	// RegExp should be used very carefully and not applied to a large amount of data, as this can greatly affect performance
 	CxList find_possible_inj = data_sql.FindByRegex(@"\#\$", true, true, true);
 
-    // Избавляемся от лишних срабатываний, если они есть и выводим в результат
+    // Get rid of false positives, if any, and output the result
 	result = find_possible_inj.FindByType(typeof(BinaryExpr));
 }

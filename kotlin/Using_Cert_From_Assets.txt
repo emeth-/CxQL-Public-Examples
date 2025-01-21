@@ -1,5 +1,5 @@
 /*
-    Использование сертификатов из ресурсов приложения
+    Using certificates from application resources
     <name>.der / <name>.cer / private_key / public_key
 */
 

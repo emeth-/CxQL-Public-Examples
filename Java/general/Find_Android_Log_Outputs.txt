@@ -1,17 +1,17 @@
 /*
-    Добавлена поддержка библиотек Timber и Loggi для логирования
+    Added support for Timber and Loggi libraries for logging
 */
 
-// Получаем результат выполнения базового правила
+// Get the result of the base rule execution
 result = base.Find_Android_Log_Outputs();
 
-// Дополняем вызовами, которые приходят из библиотеки Timber
+// Supplement with calls that come from the Timber library
 result.Add(
   All.FindByExactMemberAccess("Timber.*") +
   All.FindByShortName("Timber").GetMembersOfTarget()
 );
 
-// Дополняем вызовами, которые приходят из библиотеки Loggi
+// Supplement with calls that come from the Loggi library
 result.Add(
 	All.FindByExactMemberAccess("Loggi.*") +
 	All.FindByShortName("Loggi").GetMembersOfTarget()

@@ -1,27 +1,27 @@
 /*
-    Поиск использования в коде уязвимых методов в библиотеке Lodash
+    Search for the use of vulnerable methods in the Lodash library
 */
 
-// Ищем все строки: в которых встречается строка lodash (предполагаем, что это объявление импорта библиотеки
+// Find all strings: where the string lodash appears (assuming this is the import declaration of the library)
 CxList lodash_strings = Find_String_Literal().FindByShortName("*lodash*");
 
-// Ищем все данные: которые взаимодействуют с этими строками
+// Find all data: that interacts with these strings
 CxList data_on_lodash = All.InfluencedBy(lodash_strings);
 
 
-// Задаем список уязвимых методов
+// Define a list of vulnerable methods
 List<string> vulnerable_methods = new List<string> {"template", "*set"};
 
-// Ищем все наши уязвимые методы, которые перечисленны в уязвимостях и отфильтровываем их только там, где они вызывались
+// Find all our vulnerable methods listed in the vulnerabilities and filter them only where they were called
 CxList vulnerableMethods = All.FindByShortNames(vulnerable_methods).FindByType(typeof(MethodInvokeExpr));
 
-//Находим все данные: которые взаимодействуют с данными методами
+// Find all data that interacts with these methods
 CxList vulnFlow = All.InfluencedBy(vulnerableMethods);
 
-// Если есть пересечение по этим данным - кладем в результат
+// If there is an intersection on this data - add to the result
 result = vulnFlow * data_on_lodash;
 
-// Формируем список путей по которым мы уже прошли, чтобы фильтровать в дальнейшем дубли
+// Form a list of paths we have already passed to filter out duplicates in the future
 List<string> lodash_result_path = new List<string> {};
 foreach(CxList lodash_result in result)
 {
@@ -29,8 +29,8 @@ foreach(CxList lodash_result in result)
 	lodash_result_path.Add(file_name);
 }
 
-// Дальше идет часть относящаяся к html файлам, так как в них мы не можем проследить откуда именно идет вызов
-// Формируем массив путей файлов, чтобы быть уверенными, что срабатывания уязвимых методов были именно в тех файлах, в которых объявлен lodash
+// The following part relates to html files, as we cannot trace where the call comes from in them
+// Form an array of file paths to ensure that the vulnerable methods were triggered in the files where lodash is declared
 List<string> lodash_path = new List<string> {};
 foreach(CxList string_lodash in lodash_strings)
 {
@@ -38,7 +38,7 @@ foreach(CxList string_lodash in lodash_strings)
 	lodash_path.Add(file_name);
 }
 
-// Перебираем все уязвимые методы и убеждаемся, что они вызваны в тех же файлах, что и объявление/включение lodash
+// Iterate over all vulnerable methods and make sure they are called in the same files as the lodash declaration/inclusion
 foreach(CxList method in vulnerableMethods)
 {
 	string file_name_method = method.GetFirstGraph().LinePragma.FileName;
@@ -47,5 +47,5 @@ foreach(CxList method in vulnerableMethods)
 	}
 }
 
-// Убираем все UknownReferences(из-за кривости парсинга JS) и оставляем самый "длинный" из путей, если такие встречаются
+// Remove all UnknownReferences (due to incorrect JS parsing) and leave the "longest" path if such are found
 result = result.ReduceFlow(CxList.ReduceFlowType.ReduceSmallFlow) - result.FindByType(typeof(UnknownReference));

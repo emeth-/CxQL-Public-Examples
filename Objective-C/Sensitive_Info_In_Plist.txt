@@ -1,21 +1,21 @@
 /*
-    Поиск sensitive данных в файлах формата .plist
+    Search for sensitive data in .plist files
 */
 
-// Используем результат выполнения правила по поиску файлов plist, чтобы уменьшить время работы правила и 
+// Use the result of the rule for searching plist files to reduce the rule's runtime
 CxList plist = Find_Plist_Elements();
 
-// Инициализируем новую переменную
+// Initialize a new variable
 CxList dictionarySettings = All.NewCxList();
 
-// Теперь добавим поиск всех интересующих нас значений. В дальнейшем можно расширять этот список.
-// Для поиска значений, как ни странно, используется FindByMemberAccess - поиск обращений к методам. Второй параметр внутри функции, false, означает, что поиск нечувствителен к регистру
+// Now add the search for all values of interest. This list can be expanded in the future.
+// To search for values, strangely enough, FindByMemberAccess is used - a search for method accesses. The second parameter inside the function, false, means that the search is case-insensitive
 dictionarySettings.Add(plist.FindByMemberAccess("apikey", false));
 dictionarySettings.Add(plist.FindByMemberAccess("privatekey", false));
 dictionarySettings.Add(plist.FindByMemberAccess("*token", false));
 
-// Для корректного поиска из-за особенностей структуры plist - нужно искать по типу "If statement"
+// For correct search due to the peculiarities of the plist structure - you need to search by type "If statement"
 CxList ifStatements = plist.FindByType(typeof(IfStmt));
 
-// Добавляем в результат, перед этим получив родительский узел - для правильного отображения
+// Add to the result, first getting the parent node - for correct display
 result = dictionarySettings.FindByFathers(ifStatements);
