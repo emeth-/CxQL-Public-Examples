@@ -2,10 +2,10 @@
 
 This repo is forked from a Russian repo as-is, just translated into English. The two blog posts associated with this repo have also been translated into English.
 
-https://habr.com/ru/companies/dins/articles/477742/ -> https://emeth-.github.io/CxQL-Public-Examples/cheatsheet_1.html
+[https://habr.com/ru/companies/dins/articles/477742/](https://habr.com/ru/companies/dins/articles/477742/) -> [https://emeth-.github.io/CxQL-Public-Examples/cheatsheet_1.html](https://emeth-.github.io/CxQL-Public-Examples/cheatsheet_1.html)
 
 
-https://habr.com/ru/companies/swordfish_security/articles/521396/ -> https://emeth-.github.io/CxQL-Public-Examples/cheatsheet_2.html
+[https://habr.com/ru/companies/swordfish_security/articles/521396/](https://habr.com/ru/companies/swordfish_security/articles/521396/) -> [https://emeth-.github.io/CxQL-Public-Examples/cheatsheet_2.html](https://emeth-.github.io/CxQL-Public-Examples/cheatsheet_2.html)
 
 --------------
 

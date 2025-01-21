@@ -1,5 +1,5 @@
 /*
-    Доработка правила для поиска sensitive данных
+    Refine the rule to search for sensitive data
 */
 
 CxList sens_info = Find_Sensitive_Data();
